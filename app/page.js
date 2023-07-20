@@ -1,5 +1,5 @@
 "use client"
-import Header from "@/components/header";
+import Header from "@/components/Header";
 import { useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
