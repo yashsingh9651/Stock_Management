@@ -85,29 +85,29 @@ const [loading, setLoading] = useState(false);
     <>
       <Header />
       <ToastContainer/>
-      <div className="container mx-auto px-10">
+      <div className="container mx-auto lg:px-10 px-2">
         {/* Search Products */}
-        <h1 className="text-xl font-semibold mt-8">Search Producds</h1>
+        <h1 className="lg:text-xl text-lg font-semibold mt-8">Search Products</h1>
         <div className="flex">
           <input
             type="text"
             id="search"
-            className="bg-gray-200 border capitalize text-lg flex-1 border-black rounded-l-md px-3 py-1"
+            className="bg-gray-200 border capitalize lg:text-lg text-base flex-1 border-black rounded-l-md px-3 py-1"
             placeholder="Enter product name"
             onChange={dropdownEdit}
           />
-          <select className="bg-gray-200 border border-black rounded-r-md px-2">
+          {/* <select className="bg-gray-200 border border-black rounded-r-md px-2">
             <option value="product1">All</option>
             <option value="product1">Product 1</option>
             <option value="product2">Product 2</option>
-          </select>
+          </select> */}
         </div>
         
           {/* Displaying Dropdown Products */}
           {loading&&<Loader/>}
-        <div className="absolute lg:w-4/5 xl:w-3/4 bg-white">
+        <div className="absolute w-11/12 bg-white">
           {dropdown.map((item) => {
-            return<div key={item._id} className="container my-1 flex justify-between text-lg bg-gray-200 px-4 rounded border border-gray-400 hover:bg-gray-300">
+            return<div key={item._id} className="container my-1 flex justify-between lg:text-lg text-base bg-gray-200 lg:px-4 px-2 rounded border border-gray-400 hover:bg-gray-300">
               <h1 className="capitalize">{item.productName}</h1>
               <h1>{item.quantity}</h1>
               <h1>₹{item.price}</h1>
@@ -117,7 +117,7 @@ const [loading, setLoading] = useState(false);
 
         {/* Adding product */}
         <form className="mt-5" onSubmit={handleSubmit}>
-          <h2 className="text-xl font-semibold">Add a Product</h2>
+          <h2 className="lg:text-xl text-lg font-semibold">Add a Product</h2>
           <label htmlFor="name">Product Name</label>
           <input
             type="text"
@@ -126,7 +126,7 @@ const [loading, setLoading] = useState(false);
             placeholder="Minimum 3 letters"
             name="productName"
             value={values.productName}
-            className="bg-gray-200 w-full capitalize border px-3 text-lg border-black rounded mb-5"
+            className="bg-gray-200 w-full capitalize border px-3 lg:text-lg text-base border-black rounded mb-5"
             />
           <label htmlFor="quantity">Quantity</label>
           <input
@@ -135,7 +135,7 @@ const [loading, setLoading] = useState(false);
             id="quantity"
             name="quantity"
             value={values.quantity}
-            className="bg-gray-200 w-full border px-3 text-lg border-black rounded mb-5"
+            className="bg-gray-200 w-full border px-3 lg:text-lg text-base border-black rounded mb-5"
             />
           <label htmlFor="price">Price</label>
           <input
@@ -144,7 +144,7 @@ const [loading, setLoading] = useState(false);
             id="price"
             name="price"
             value={values.price}
-            className="bg-gray-200 w-full border px-3 text-lg border-black rounded mb-3"
+            className="bg-gray-200 w-full border px-3 lg:text-lg text-base border-black rounded mb-3"
           />
           <button type="submit" className="bg-blue-500 rounded px-3 py-1 text-white hover:bg-blue-700">
             Add Product
@@ -152,7 +152,7 @@ const [loading, setLoading] = useState(false);
         </form>
 
         {/* Displaying existing stock */}
-        <h1 className="text-2xl text-center my-3 font-semibold">Current Stock</h1>
+        <h1 className="lg:text-2xl text-lg text-center my-3 font-semibold">Current Stock</h1>
         <table className="border-collapse w-full bg-red-100 mb-12">
           <thead>
             <tr>
