@@ -96,11 +96,6 @@ const [loading, setLoading] = useState(false);
             placeholder="Enter product name"
             onChange={dropdownEdit}
           />
-          {/* <select className="bg-gray-200 border border-black rounded-r-md px-2">
-            <option value="product1">All</option>
-            <option value="product1">Product 1</option>
-            <option value="product2">Product 2</option>
-          </select> */}
         </div>
         
           {/* Displaying Dropdown Products */}
