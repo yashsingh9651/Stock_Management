@@ -2,21 +2,21 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 //  Fetching Products
 export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  const response = await fetch("https://akanksha-enterprises.vercel.app/api/product");
+  const response = await fetch("https://akanksha-enterprises.vercel.app/api/product" ||"http://localhost:3000/api/product");
   let rjson = await response.json();
   return rjson.products;
 });
 
 // Fetching Dropdown Products...
 export const fetchDropdownProducts = createAsyncThunk("fetchDropdownProducts", async (query) => {
-  const response = await fetch("http://localhost:3000/api/search?query="+query);
+  const response = await fetch("https://akanksha-enterprises.vercel.app/api/search?query="+query||"http://localhost:3000/api/search?query="+query);
   let rjson = await response.json();
   return rjson.products;
 });
 
 //  Adding Product...
 export const addProduct = createAsyncThunk("addProduct", async (values) => {
-  const response = await fetch("http://localhost:3000/api/product", {
+  const response = await fetch("https://akanksha-enterprises.vercel.app/api/product" ||"http://localhost:3000/api/product", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -46,14 +46,14 @@ export const addProduct = createAsyncThunk("addProduct", async (values) => {
       theme: "light",
     });
   }
-  const r = await fetch("http://localhost:3000/api/product");
+  const r = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
   let rjson = await r.json();
   return rjson.products;
 });
 
 //  Editting Product...
 export const editProduct = createAsyncThunk("editProduct", async (values) => {
-  const response = await fetch("http://localhost:3000/api/editProduct", {
+  const response = await fetch("https://akanksha-enterprises.vercel.app/api/editProduct"||"http://localhost:3000/api/editProduct", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
       theme: "light",
     });
   }
-  const r = await fetch("http://localhost:3000/api/product");
+  const r = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
   let rjson = await r.json();
   return rjson.products;
 });
