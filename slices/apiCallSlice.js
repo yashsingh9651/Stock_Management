@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 //  Fetching Products
 export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  // const response = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
+  // const response = await fetch("https://akanksha-enterprises.vercel.app/api/product");
   const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await response.json();
   return rjson.products;
