@@ -2,21 +2,32 @@
 import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 import EdditingBox from "@/components/EdditingBox";
-import { fetchProducts, addProduct,setDropdownEmpty,toggleEditBox,toggleLoading,fetchDropdownProducts,setQuery } from "@/slices/apiCallSlice";
+import {
+  fetchProducts,
+  addProduct,
+  setDropdownEmpty,
+  toggleEditBox,
+  toggleLoading,
+  fetchDropdownProducts,
+  setQuery,
+} from "@/slices/apiCallSlice";
 import { Schema } from "./schema";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { BiSolidEdit } from "react-icons/bi";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormik } from "formik";
 export default function Home() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.apiCall.products);
   const query = useSelector((state) => state.apiCall.query);
-  const dropdownProducts = useSelector((state) => state.apiCall.dropdownProducts);
+  const dropdownProducts = useSelector(
+    (state) => state.apiCall.dropdownProducts
+  );
   const showEditBox = useSelector((state) => state.apiCall.showEditBox);
   const loading = useSelector((state) => state.apiCall.loading);
+  const loading2 = useSelector((state) => state.apiCall.loading2);
   // Displaying search result on typing in search field ....
   const dropdownEdit = async (e) => {
     dispatch(setQuery(e.target.value));
@@ -141,14 +152,15 @@ export default function Home() {
         <h1 className="lg:text-2xl text-lg text-center my-3 font-semibold">
           Current Stock
         </h1>
+        {loading2 && <Loader />}
         <table className="border-collapse w-full bg-red-100 mb-12">
-          <thead>
+          {!loading2&&<thead>
             <tr>
               <th className="border border-black px-4 py-2">Product Name</th>
               <th className="border border-black px-4 py-2">Quantity</th>
               <th className="border border-black px-4 py-2">Price</th>
             </tr>
-          </thead>
+          </thead>}
 
           {/* Maping  Existing Stock */}
           <tbody>

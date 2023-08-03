@@ -2,21 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 //  Fetching Products
 export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  const response = await fetch("https://akanksha-enterprises.vercel.app/api/product" ||"http://localhost:3000/api/product");
+  // const response = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await response.json();
   return rjson.products;
 });
 
 // Fetching Dropdown Products...
 export const fetchDropdownProducts = createAsyncThunk("fetchDropdownProducts", async (query) => {
-  const response = await fetch("https://akanksha-enterprises.vercel.app/api/search?query="+query||"http://localhost:3000/api/search?query="+query);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/search?query=`+query);
   let rjson = await response.json();
   return rjson.products;
 });
 
 //  Adding Product...
 export const addProduct = createAsyncThunk("addProduct", async (values) => {
-  const response = await fetch("https://akanksha-enterprises.vercel.app/api/product" ||"http://localhost:3000/api/product", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -46,14 +47,14 @@ export const addProduct = createAsyncThunk("addProduct", async (values) => {
       theme: "light",
     });
   }
-  const r = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
+  const r = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await r.json();
   return rjson.products;
 });
 
 //  Editting Product...
 export const editProduct = createAsyncThunk("editProduct", async (values) => {
-  const response = await fetch("https://akanksha-enterprises.vercel.app/api/editProduct"||"http://localhost:3000/api/editProduct", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/editProduct`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +84,7 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
       theme: "light",
     });
   }
-  const r = await fetch("https://akanksha-enterprises.vercel.app/api/product"||"http://localhost:3000/api/product");
+  const r = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await r.json();
   return rjson.products;
 });
@@ -93,6 +94,7 @@ const apiCallSlice = createSlice({
   name: "apiCall",
   initialState: {
     products: [],
+    loading2:true,
     dropdownProducts: [],
     query:"",
     showEditBox: false,
@@ -114,6 +116,7 @@ const apiCallSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
+      state.loading2 = false;
       state.products = action.payload;
     });
     builder.addCase(addProduct.fulfilled, (state, action) => {
@@ -129,5 +132,5 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox,toggleLoading,setDropdownEmpty,setQuery } = apiCallSlice.actions;
+export const { toggleEditBox,toggleLoading,setDropdownEmpty,setQuery} = apiCallSlice.actions;
 export default apiCallSlice.reducer;

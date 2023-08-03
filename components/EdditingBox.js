@@ -19,7 +19,7 @@ const EdditingBox = ({ editFuncData }) => {
       dispatch(editProduct(values));
       setTimeout(() => {
         dispatch(fetchDropdownProducts(query));
-      }, 3500);
+      }, 4000);
     },
   });
   return (
