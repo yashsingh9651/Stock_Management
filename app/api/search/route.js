@@ -7,14 +7,16 @@ export async function GET(request) {
   try {
     const database = client.db("stock");
     const inventory = database.collection("inventory");
-    const products = await inventory.aggregate([
-      {
-        $match: {
-          $or: [{ productName: { $regex: query, $options: "i" } }],
+    const products = await inventory
+      .aggregate([
+        {
+          $match: {
+            $or: [{ productName: { $regex: query, $options: "i" } }],
+          },
         },
-      },
-    ]).toArray();
-    return NextResponse.json({ success: true, products});
+      ])
+      .toArray();
+    return NextResponse.json({ success: true, products });
   } finally {
     await client.close();
   }

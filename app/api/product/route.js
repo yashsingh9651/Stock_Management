@@ -8,7 +8,7 @@ export async function GET(request) {
     const inventory = database.collection("inventory");
     const query = {};
     const products = await inventory.find(query).toArray();
-    return NextResponse.json({products});
+    return NextResponse.json({ products });
   } finally {
     await client.close();
   }
@@ -21,7 +21,7 @@ export async function POST(request) {
     const database = client.db("stock");
     const inventory = database.collection("inventory");
     await inventory.insertOne(body);
-    return NextResponse.json({ ok: true});
+    return NextResponse.json({ ok: true });
   } finally {
     await client.close();
   }

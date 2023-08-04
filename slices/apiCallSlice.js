@@ -2,18 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 //  Fetching Products
 export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  // const response = await fetch("https://akanksha-enterprises.vercel.app/api/product");
   const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await response.json();
   return rjson.products;
 });
 
 // Fetching Dropdown Products...
-export const fetchDropdownProducts = createAsyncThunk("fetchDropdownProducts", async (query) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/search?query=`+query);
-  let rjson = await response.json();
-  return rjson.products;
-});
+export const fetchDropdownProducts = createAsyncThunk(
+  "fetchDropdownProducts",
+  async (query) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/api/search?query=` + query
+    );
+    let rjson = await response.json();
+    return rjson.products;
+  }
+);
 
 //  Adding Product...
 export const addProduct = createAsyncThunk("addProduct", async (values) => {
@@ -54,13 +58,16 @@ export const addProduct = createAsyncThunk("addProduct", async (values) => {
 
 //  Editting Product...
 export const editProduct = createAsyncThunk("editProduct", async (values) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/editProduct`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_HOST}/api/editProduct`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    }
+  );
   if (response.ok) {
     toast.success("Product Editted Successfully", {
       position: "top-center",
@@ -94,11 +101,11 @@ const apiCallSlice = createSlice({
   name: "apiCall",
   initialState: {
     products: [],
-    loading2:true,
+    loading2: true,
     dropdownProducts: [],
-    query:"",
+    query: "",
     showEditBox: false,
-    loading:false,
+    loading: false,
   },
   reducers: {
     toggleEditBox: (state) => {
@@ -107,8 +114,8 @@ const apiCallSlice = createSlice({
     toggleLoading: (state) => {
       state.loading = true;
     },
-    setQuery: (state,action) => {
-      state.query =action.payload;
+    setQuery: (state, action) => {
+      state.query = action.payload;
     },
     setDropdownEmpty: (state) => {
       state.dropdownProducts = [];
@@ -132,5 +139,6 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox,toggleLoading,setDropdownEmpty,setQuery} = apiCallSlice.actions;
+export const { toggleEditBox, toggleLoading, setDropdownEmpty, setQuery } =
+  apiCallSlice.actions;
 export default apiCallSlice.reducer;

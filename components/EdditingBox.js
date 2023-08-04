@@ -1,9 +1,13 @@
 import React from "react";
 import { Schema } from "../app/schema";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { GiCrossMark } from 'react-icons/gi';
-import { editProduct,fetchDropdownProducts,toggleEditBox } from "@/slices/apiCallSlice";
+import { GiCrossMark } from "react-icons/gi";
+import {
+  editProduct,
+  fetchDropdownProducts,
+  toggleEditBox,
+} from "@/slices/apiCallSlice";
 const EdditingBox = ({ editFuncData }) => {
   const query = useSelector((state) => state.apiCall.query);
   const dispatch = useDispatch();
@@ -26,7 +30,14 @@ const EdditingBox = ({ editFuncData }) => {
     <>
       <div className="w-full flex justify-center backdrop-blur-sm items-center bg-opacity-70 bg-slate-400 h-full fixed z-50 top-0">
         <div className="w-2/3 max-h-fit relative bg-slate-200 rounded-lg p-3 shadow-xl shadow-slate-600">
-          <h1 className="absolute text-2xl text-red-500 hover:text-red-700 top-4 right-5 z-50" onClick={()=>{dispatch(toggleEditBox())}} ><GiCrossMark/></h1>
+          <h1
+            className="absolute text-2xl text-red-500 hover:text-red-700 top-4 right-5 z-50"
+            onClick={() => {
+              dispatch(toggleEditBox());
+            }}
+          >
+            <GiCrossMark />
+          </h1>
           <h1 className="text-center text-xl font-semibold underline">
             Edit Product
           </h1>

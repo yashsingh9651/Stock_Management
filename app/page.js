@@ -28,6 +28,10 @@ export default function Home() {
   const showEditBox = useSelector((state) => state.apiCall.showEditBox);
   const loading = useSelector((state) => state.apiCall.loading);
   const loading2 = useSelector((state) => state.apiCall.loading2);
+  // Fetching Products on Page Load...
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
   // Displaying search result on typing in search field ....
   const dropdownEdit = async (e) => {
     dispatch(setQuery(e.target.value));
@@ -38,18 +42,12 @@ export default function Home() {
       dispatch(setDropdownEmpty());
     }
   };
-  // Fetching Products on Page Load...
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
-
   // Handeling Edit Button....
   const [editFuncData, setEditFuncData] = useState("");
   const editFunc = (item) => {
     setEditFuncData(item);
     dispatch(toggleEditBox());
   };
-
   // Handleing Formik, Yup and dispatching action to add product ....
   const data = {
     productName: "",
@@ -154,13 +152,15 @@ export default function Home() {
         </h1>
         {loading2 && <Loader />}
         <table className="border-collapse w-full bg-red-100 mb-12">
-          {!loading2&&<thead>
-            <tr>
-              <th className="border border-black px-4 py-2">Product Name</th>
-              <th className="border border-black px-4 py-2">Quantity</th>
-              <th className="border border-black px-4 py-2">Price</th>
-            </tr>
-          </thead>}
+          {!loading2 && (
+            <thead>
+              <tr>
+                <th className="border border-black px-4 py-2">Product Name</th>
+                <th className="border border-black px-4 py-2">Quantity</th>
+                <th className="border border-black px-4 py-2">Price</th>
+              </tr>
+            </thead>
+          )}
 
           {/* Maping  Existing Stock */}
           <tbody>
