@@ -7,7 +7,7 @@ export const metadata = {
   title: "Akanksha Enterprises",
   description: "Billing and Stock Management",
   verification:{
-    google:`google-site-verification=${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`
+    google:`${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`
   }
 };
 export default function RootLayout({ children }) {
