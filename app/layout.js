@@ -6,9 +6,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Akanksha Enterprises",
   description: "Billing and Stock Management",
-  verification:{
-    google:`${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`
-  }
 };
 export default function RootLayout({ children }) {
   return (
