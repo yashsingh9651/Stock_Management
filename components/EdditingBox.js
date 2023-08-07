@@ -1,5 +1,5 @@
 import React from "react";
-import { Schema } from "../app/schema";
+import { Schema } from "../app/schema/product";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { GiCrossMark } from "react-icons/gi";

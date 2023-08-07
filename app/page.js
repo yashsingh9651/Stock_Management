@@ -1,5 +1,4 @@
 "use client";
-import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 import EdditingBox from "@/components/EdditingBox";
 import {
@@ -11,7 +10,7 @@ import {
   fetchDropdownProducts,
   setQuery,
 } from "@/slices/apiCallSlice";
-import { Schema } from "./schema";
+import { Schema } from "./schema/product";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { BiSolidEdit } from "react-icons/bi";
@@ -64,7 +63,6 @@ export default function Home() {
   });
   return (
     <>
-      <Header />
       <ToastContainer />
       {showEditBox && <EdditingBox editFuncData={editFuncData} />}
       <div className="container mx-auto lg:px-10 px-2">
