@@ -24,8 +24,9 @@ const page = () => {
           },
           body: JSON.stringify(values),
         });
-        if (response.ok) {
-          toast.success('Registered Successfully', {
+        const res = await response.json();
+        if (res.ok) {
+          toast.success(res.message, {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -37,7 +38,7 @@ const page = () => {
           });
           action.resetForm();
         } else {
-          toast.warning(response.message, {
+          toast.error(res.message, {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -47,6 +48,7 @@ const page = () => {
             progress: undefined,
             theme: "light",
           });
+          action.resetForm();
         }
       }else{
         toast.warning("Password and Confirm Password Should be Shame", {

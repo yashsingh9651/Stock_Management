@@ -28,7 +28,8 @@ export const addProduct = createAsyncThunk("addProduct", async (values) => {
     },
     body: JSON.stringify(values),
   });
-  if (response.ok) {
+  const res = await response.json();
+  if (res.ok) {
     toast.success("Product Added Successfully", {
       position: "top-center",
       autoClose: 5000,
@@ -68,7 +69,8 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
       body: JSON.stringify(values),
     }
   );
-  if (response.ok) {
+  const res = await response.json();
+  if (res.ok) {
     toast.success("Product Editted Successfully", {
       position: "top-center",
       autoClose: 5000,
