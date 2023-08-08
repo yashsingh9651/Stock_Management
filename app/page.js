@@ -16,8 +16,16 @@ import { useEffect, useState } from "react";
 import { BiSolidEdit } from "react-icons/bi";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSession} from "next-auth/react";
 import { useFormik } from "formik";
+import { redirect } from "next/navigation";
 export default function Home() {
+  const {data:session} = useSession({
+    required:true,
+    onUnauthenticated(){
+      redirect(process.env.NEXT_PUBLIC_AUTH_URL)
+    }
+  });
   const dispatch = useDispatch();
   const products = useSelector((state) => state.apiCall.products);
   const query = useSelector((state) => state.apiCall.query);
@@ -29,7 +37,7 @@ export default function Home() {
   const loading2 = useSelector((state) => state.apiCall.loading2);
   // Fetching Products on Page Load...
   useEffect(() => {
-    dispatch(fetchProducts());
+      dispatch(fetchProducts());
   }, []);
   // Displaying search result on typing in search field ....
   const dropdownEdit = async (e) => {

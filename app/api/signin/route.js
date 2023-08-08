@@ -11,7 +11,7 @@ export async function POST(request) {
       const checkingUser = await user.findOne({email: body.email});
       if (checkingUser && (await compare(body.password,checkingUser.password))) {
         const {password,...userWithoutPass} = checkingUser
-            return NextResponse.json(userWithoutPass);
+            return NextResponse.json({ok:true,userWithoutPass});
         }else{
             return NextResponse.json({ ok: false,message:'Incorrect Credentials' });
         }
