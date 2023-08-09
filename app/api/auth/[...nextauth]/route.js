@@ -24,7 +24,6 @@ const handler = NextAuth({
           }),
         });
         const user = await res.json();
-        console.log(user);
         if (user.ok) {
           return user.userWithoutPass;
         }
@@ -32,9 +31,9 @@ const handler = NextAuth({
       },
     }),
   ],
-  // pages:{
-  //   signIn:"/SignIn"
-  // }
+  pages:{
+    signIn:"/SignIn"
+  }
 });
 
 export { handler as GET, handler as POST };

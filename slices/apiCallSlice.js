@@ -108,6 +108,9 @@ const apiCallSlice = createSlice({
     query: "",
     showEditBox: false,
     loading: false,
+    showProductBox:false,
+    billingProducts:[],
+    subTotal:''
   },
   reducers: {
     toggleEditBox: (state) => {
@@ -121,6 +124,17 @@ const apiCallSlice = createSlice({
     },
     setDropdownEmpty: (state) => {
       state.dropdownProducts = [];
+    },
+    setShowProductBox: (state) => {
+      state.showProductBox = !state.showProductBox;
+    },
+    concatingBillingProduct: (state,action) => {
+      state.billingProducts = state.billingProducts.concat(action.payload);
+      let subT = 0;
+      state.billingProducts.forEach((element)=>{
+        subT += element.price*element.quantity;
+        state.subTotal = subT;
+      })
     },
   },
   extraReducers: (builder) => {
@@ -141,6 +155,6 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox, toggleLoading, setDropdownEmpty, setQuery } =
+export const { toggleEditBox, toggleLoading, setDropdownEmpty,concatingBillingProduct,setShowProductBox,setQuery } =
   apiCallSlice.actions;
 export default apiCallSlice.reducer;

@@ -4,7 +4,15 @@ import React from 'react';
 import { toast, ToastContainer } from "react-toastify";
 import { Schema } from "../schema/user";
 import "react-toastify/dist/ReactToastify.css";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 const page = () => {
+  const {data:session} = useSession({
+    required:true,
+    onUnauthenticated(){
+      redirect(process.env.NEXT_PUBLIC_AUTH_URL)
+    }
+  });
 // Handleing Formik, Yup and dispatching action to add product ....
   const data = {
     username: "",

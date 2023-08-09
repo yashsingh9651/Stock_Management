@@ -9,7 +9,6 @@ const Header = () => {
   const session = useSession();
   const [showProfile, setShowProfile] = useState(false);
   if (session.data) {
-    console.log(session);
     return (
       <header className="text-gray-500 relative mx-auto body-font container">
         <div className="container mx-auto justify-between flex flex-wrap px-4 py-2 flex-col md:flex-row items-center">
@@ -22,7 +21,7 @@ const Header = () => {
           </Link>
           <div className="flex">
             {showProfile && (
-              <div className="rounded absolute top-16 w-2/12 bg-slate-600 text-white">
+              <div className="rounded absolute top-16 w-2/12 bg-slate-600 text-white z-50">
                 <h1 className="text-lg font-semibold p-2 capitalize">
                   {session?.data?.user?.email?.slice(0, 11)}
                 </h1>
