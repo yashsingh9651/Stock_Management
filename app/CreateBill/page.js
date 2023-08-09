@@ -11,7 +11,7 @@ import {
   toggleLoading,
 } from "@/slices/apiCallSlice";
 import Loader from "@/components/Loader";
-import AddProductBox from "@/components/addProductBox";
+import AddProductBox from "@/components/AddProductBox";
 const page = () => {
   const { data: session } = useSession({
     required: true,
