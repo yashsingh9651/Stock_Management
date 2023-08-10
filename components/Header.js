@@ -39,7 +39,7 @@ const Header = () => {
             )}
             <CgProfile
             title="Profile"
-              className="text-4xl mr-2 hover:text-black"
+              className="text-3xl mr-2 hover:text-black"
               onClick={() => setShowProfile(!showProfile)}
             />
             <nav className="flex flex-wrap items-center text-xl justify-center">
@@ -69,7 +69,7 @@ const Header = () => {
           <div>
             <CgProfile
             title="Sign In"
-                className="text-4xl mr-2 cursor-pointer hover:text-black"
+                className="text-3xl mr-2 cursor-pointer hover:text-black"
                 onClick={() => signIn()}
               />
           </div>

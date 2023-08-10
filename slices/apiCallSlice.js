@@ -7,6 +7,13 @@ export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
   return rjson.products;
 });
 
+//  Fetching Bilss...
+export const fetchBills = createAsyncThunk("fetchBills", async () => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/bills`);
+  let rjson = await response.json();
+  return rjson.allBills;
+});
+
 // Fetching Dropdown Products...
 export const fetchDropdownProducts = createAsyncThunk(
   "fetchDropdownProducts",
@@ -16,6 +23,44 @@ export const fetchDropdownProducts = createAsyncThunk(
     );
     let rjson = await response.json();
     return rjson.products;
+  }
+);
+
+// Generating Bill...
+export const generatingBill = createAsyncThunk(
+  "generatingBill",
+  async (products) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/billProducts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(products),
+    });
+    const res = await response.json();
+    if (res.ok) {
+      toast.success("Bill Generated Successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Internal Server Error", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
 );
 
@@ -106,11 +151,12 @@ const apiCallSlice = createSlice({
     loading2: true,
     dropdownProducts: [],
     query: "",
+    bills:[],
     showEditBox: false,
     loading: false,
     showProductBox:false,
-    billingProducts:[],
-    subTotal:''
+    clientBillingProducts:[],
+    subTotal:0
   },
   reducers: {
     toggleEditBox: (state) => {
@@ -125,13 +171,17 @@ const apiCallSlice = createSlice({
     setDropdownEmpty: (state) => {
       state.dropdownProducts = [];
     },
-    setShowProductBox: (state) => {
+    toggleProductBox: (state) => {
       state.showProductBox = !state.showProductBox;
     },
+    setClientBillingProductsEmpty: (state) => {
+      state.clientBillingProducts = [];
+      state.subTotal=0
+    },
     concatingBillingProduct: (state,action) => {
-      state.billingProducts = state.billingProducts.concat(action.payload);
+      state.clientBillingProducts = state.clientBillingProducts.concat(action.payload);
       let subT = 0;
-      state.billingProducts.forEach((element)=>{
+      state.clientBillingProducts.forEach((element)=>{
         subT += element.price*element.quantity;
         state.subTotal = subT;
       })
@@ -141,6 +191,9 @@ const apiCallSlice = createSlice({
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       state.loading2 = false;
       state.products = action.payload;
+    });
+    builder.addCase(fetchBills.fulfilled, (state, action) => {
+      state.bills = action.payload;
     });
     builder.addCase(addProduct.fulfilled, (state, action) => {
       state.products = action.payload;
@@ -155,6 +208,6 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox, toggleLoading, setDropdownEmpty,concatingBillingProduct,setShowProductBox,setQuery } =
+export const { toggleEditBox,setClientBillingProductsEmpty, toggleLoading, setDropdownEmpty,concatingBillingProduct,toggleProductBox,setQuery } =
   apiCallSlice.actions;
 export default apiCallSlice.reducer;
