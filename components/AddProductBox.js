@@ -1,13 +1,13 @@
 "use client"
 import { Schema } from '@/app/schema/product';
-import { concatingBillingProduct, toggleProductBox } from '@/slices/apiCallSlice';
+import { concatingBillingProduct, sliceingClientBillProd, toggleProductBox } from '@/slices/apiCallSlice';
 import { useFormik } from 'formik';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 const AddProductBox = ({editFuncData}) => {
   const dispatch = useDispatch();
-  
   const bills = useSelector((state) => state.apiCall.bills);
+  const editClientProd = useSelector((state) => state.apiCall.editClientProd);
     const data = {
         productName: editFuncData.productName,
         quantity: editFuncData.quantity,
@@ -18,28 +18,27 @@ const AddProductBox = ({editFuncData}) => {
         validationSchema: Schema,
         onSubmit: async (values) => {
           const product = {
-            BillNumber :bills.length+1,
-            productName:values.productName,
+            id:new Date().toLocaleTimeString(),
+            billNumber :bills.length+1,
+            productName:editFuncData.productName,
             quantity:values.quantity,
             price:values.price
           }
-          dispatch(concatingBillingProduct(product));
+          if (editClientProd===null) {
+            dispatch(concatingBillingProduct(product));
+            dispatch(toggleProductBox());
+          }else{
+            dispatch(concatingBillingProduct(product));
           dispatch(toggleProductBox());
+          dispatch(sliceingClientBillProd(editClientProd));
+          }
         },
       });
   return (
-    <div className='fixed left-0 top-0 flex justify-center items-center w-full h-full backdrop-blur-sm'>
+    <div className='fixed left-0 top-0 z-50 flex justify-center items-center w-full h-full backdrop-blur-sm'>
       <form onSubmit={handleSubmit} className="w-1/2 p-2 mx-auto bg-gray-500 rounded text-white">
         <label htmlFor="name">Product Name</label>
-              <input
-                type="text"
-                onChange={handleChange}
-                id="name"
-                placeholder="Minimum 3 letters"
-                name="productName"
-                value={values.productName}
-                className="bg-white text-black w-full capitalize border px-3 lg:text-lg text-base border-black rounded mb-5"
-              />
+              <h1 className='text-xl font-medium capitalize'>{editFuncData.productName}</h1>
               <label htmlFor="quantity">Quantity</label>
               <input
                 type="number"

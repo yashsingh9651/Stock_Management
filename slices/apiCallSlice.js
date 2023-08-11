@@ -7,7 +7,7 @@ export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
   return rjson.products;
 });
 
-//  Fetching Bilss...
+//  Fetching Bills...
 export const fetchBills = createAsyncThunk("fetchBills", async () => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/bills`);
   let rjson = await response.json();
@@ -156,11 +156,15 @@ const apiCallSlice = createSlice({
     loading: false,
     showProductBox:false,
     clientBillingProducts:[],
-    subTotal:0
+    subTotal:0,
+    editClientProd:null,
   },
   reducers: {
     toggleEditBox: (state) => {
       state.showEditBox = !state.showEditBox;
+    },
+    toggleEditClientProd: (state,action) => {
+      state.editClientProd = action.payload;
     },
     toggleLoading: (state) => {
       state.loading = true;
@@ -177,6 +181,25 @@ const apiCallSlice = createSlice({
     setClientBillingProductsEmpty: (state) => {
       state.clientBillingProducts = [];
       state.subTotal=0
+    },
+    sliceingClientBillProd: (state,action) => {
+      const index = state.clientBillingProducts.findIndex(object => {
+        return object.id === action.payload;
+      })
+      if (index === 0) {
+        state.clientBillingProducts.shift();
+      }else{
+        state.clientBillingProducts.splice(index,index);
+      }
+      if (state.clientBillingProducts.length>0) {
+        let subT = 0;
+        state.clientBillingProducts.forEach((element)=>{
+          subT += element.price*element.quantity;
+          state.subTotal = subT;
+        });
+      }else{
+        state.subTotal=0;
+      }
     },
     concatingBillingProduct: (state,action) => {
       state.clientBillingProducts = state.clientBillingProducts.concat(action.payload);
@@ -208,6 +231,6 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox,setClientBillingProductsEmpty, toggleLoading, setDropdownEmpty,concatingBillingProduct,toggleProductBox,setQuery } =
+export const { toggleEditBox,sliceingClientBillProd,setClientBillingProductsEmpty,toggleEditClientProd, toggleLoading, setDropdownEmpty,concatingBillingProduct,toggleProductBox,setQuery } =
   apiCallSlice.actions;
 export default apiCallSlice.reducer;

@@ -17,7 +17,7 @@ const Header = () => {
             href={"/"}
             className="title-font font-medium mb-4 md:mb-0"
           >
-            <Image src="/logo.png" width={110} height={70} alt="logo" />
+            <Image priority src="/logo.png" width={110} height={70} alt="logo" />
           </Link>
           <div className="flex">
             {showProfile && (

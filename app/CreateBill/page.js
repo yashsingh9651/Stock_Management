@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { AiTwotoneDelete } from 'react-icons/ai';
+import { FaEdit } from 'react-icons/fa';
 import {
   fetchBills,
   fetchDropdownProducts,
@@ -12,8 +14,10 @@ import {
   toggleProductBox,
   toggleLoading,
   setClientBillingProductsEmpty,
+  sliceingClientBillProd,
+  toggleEditClientProd,
 } from "@/slices/apiCallSlice";
-import Loader from "@/components/Loader";
+import AtomicSpinner from "@/components/AtomicSpinner";
 import AddProductBox from "@/components/AddProductBox";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -53,6 +57,12 @@ const page = () => {
     setEditFuncData(item);
     dispatch(toggleProductBox());
   };
+  // Editing Product of billing product list...
+  const editProd = (item) => {
+    setEditFuncData(item);
+    dispatch(toggleProductBox());
+    dispatch(toggleEditClientProd(item.id))
+  }
   // generating Bill
   const generateBill = async () => {
     dispatch(generatingBill(clientBillingProducts));
@@ -91,8 +101,8 @@ const page = () => {
           />
         </div>
         {/* Displaying Dropdown Products and Loader */}
-        {loading && <Loader />}
-        <div className="absolute w-10/12 z-30 bg-white">
+        {loading && <AtomicSpinner />}
+        <div className="absolute w-10/12 z-30 backdrop-blur">
           {dropdownProducts?.map((item) => {
             return (
               <div
@@ -114,11 +124,11 @@ const page = () => {
           </h1>
           <div className="flex justify-between items-center mt-2">
             <h1 className="capitalize text-lg font-medium">
-              Biller:{session?.user?.email?.slice(0, 11)}
+              Biller: {session?.user?.email?.slice(0, 11)}
             </h1>
             <div>
               <label htmlFor="customer" className="capitalize text-lg font-medium">Customer: </label>
-              <input type="text" name="customer" autoFocus="true" onChange={(e)=>setCustomerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100" />
+              <input type="text" required placeholder="Customer Name" name="customer" autoFocus="true" onChange={(e)=>setCustomerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1" />
             </div>
             <h1 className="capitalize text-lg font-medium">Bill Number:{bills.length+1}</h1>
           </div>
@@ -131,20 +141,25 @@ const page = () => {
                 <th className="border border-black px-4 py-2">Total</th>
               </tr>
             </thead>
+            {/* Billing Products... */}
             <tbody>
               {clientBillingProducts.map((item) => (
-                <tr key={item.productName}>
+                <tr key={item.id}>
                   <td className="border capitalize border-black px-4 py-2">
                     {item.productName}
                   </td>
                   <td className="border border-black px-4 py-2">
                     {item.quantity}
                   </td>
-                  <td className="border border-black px-4 py-2">
+                  <td  className="border border-black px-4 py-2">
                     ₹{item.price}
                   </td>
-                  <td className="border border-black px-4 py-2">
+                  <td className="border border-black px-4 py-2 relative">
                     ₹{item.price * item.quantity}
+                    <div className="absolute right-1 top-1 z-50 text-3xl flex">
+                    <FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3 cursor-pointer" />
+                    <AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingClientBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -157,7 +172,8 @@ const page = () => {
         <div className="flex justify-end">
           <button
             onClick={() => generateBill()}
-            className="bg-blue-500 rounded px-2 text-lg py-1 mt-2 text-white hover:bg-blue-700"
+            disabled={clientBillingProducts.length===0}
+            className="bg-blue-500 rounded px-2 text-lg disabled:bg-blue-300 py-1 mt-2 text-white hover:bg-blue-700"
           >
             Generate Bill
           </button>

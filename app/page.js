@@ -1,5 +1,5 @@
 "use client";
-import Loader from "@/components/Loader";
+import AtomicSpinner from "@/components/AtomicSpinner";
 import EdditingBox from "@/components/EdditingBox";
 import {
   fetchProducts,
@@ -89,8 +89,8 @@ export default function Home() {
         </div>
 
         {/* Displaying Dropdown Products */}
-        {loading && <Loader />}
-        <div className="absolute w-11/12 bg-white">
+        {loading && <AtomicSpinner/>}
+        <div className="absolute w-11/12 bg-white z-40">
           {dropdownProducts.map((item) => {
             return (
               <div
@@ -156,9 +156,7 @@ export default function Home() {
         <h1 className="lg:text-2xl text-lg text-center my-3 font-semibold">
           Current Stock
         </h1>
-        {loading2 && <Loader />}
-        <table className="border-collapse w-full bg-red-100 mb-12">
-          {!loading2 && (
+        {loading2?<AtomicSpinner />:<table className="border-collapse w-full bg-red-100 mb-12">
             <thead>
               <tr>
                 <th className="border border-black px-4 py-2">Product Name</th>
@@ -166,8 +164,6 @@ export default function Home() {
                 <th className="border border-black px-4 py-2">Price</th>
               </tr>
             </thead>
-          )}
-
           {/* Maping  Existing Stock */}
           <tbody>
             {products.map((item) => (
@@ -182,7 +178,7 @@ export default function Home() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>}
       </div>
     </>
   );
