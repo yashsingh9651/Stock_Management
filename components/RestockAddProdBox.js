@@ -1,12 +1,12 @@
 "use client"
 import { Schema } from '@/app/schema/product';
-import { concatingBillingProduct, setDropdownEmpty, sliceingClientBillProd, toggleProductBox } from '@/slices/apiCallSlice';
+import { concatingRestockBillingProduct, setDropdownEmpty, sliceingRestockBillProd, toggleRestockProductBox } from '@/slices/apiCallSlice';
 import { useFormik } from 'formik';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 const AddProductBox = ({editFuncData}) => {
   const dispatch = useDispatch();
-  const bills = useSelector((state) => state.apiCall.bills);
+  const restockBills = useSelector((state) => state.apiCall.restockBills);
   const editClientProd = useSelector((state) => state.apiCall.editClientProd);
     const data = {
         productName: editFuncData.productName,
@@ -19,19 +19,19 @@ const AddProductBox = ({editFuncData}) => {
         onSubmit: async (values) => {
           const product = {
             id:new Date().toLocaleTimeString(),
-            billNumber :bills.length+1,
+            billNumber :restockBills.length+1,
             productName:editFuncData.productName,
             quantity:values.quantity,
             price:values.price
           }
           if (editClientProd===null) {
-            dispatch(toggleProductBox());
-            dispatch(concatingBillingProduct(product));
+            dispatch(concatingRestockBillingProduct(product));
+            dispatch(toggleRestockProductBox());
             dispatch(setDropdownEmpty());
           }else{
-            dispatch(sliceingClientBillProd(editClientProd));
-            dispatch(toggleProductBox());
-            dispatch(concatingBillingProduct(product));
+            dispatch(concatingRestockBillingProduct(product));
+          dispatch(toggleRestockProductBox());
+          dispatch(sliceingRestockBillProd(editClientProd));
           dispatch(setDropdownEmpty());
           }
         },
@@ -68,7 +68,7 @@ const AddProductBox = ({editFuncData}) => {
                   Add Product
                 </button>
                 <button
-                onClick={()=>dispatch(toggleProductBox())}
+                onClick={()=>dispatch(toggleRestockProductBox())}
                   className="bg-blue-700 rounded border-2 border-white px-3 py-1 text-white hover:bg-blue-500"
                 >
                   Cancel

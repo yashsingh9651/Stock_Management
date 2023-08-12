@@ -75,14 +75,15 @@ export default function Home() {
       {showEditBox && <EdditingBox editFuncData={editFuncData} />}
       <div className="container mx-auto lg:px-10 px-2">
         {/* Search Products */}
-        <h1 className="lg:text-xl text-lg font-semibold mt-8">
+        <h1 className="lg:text-lg font-semibold mt-8">
           Search Products
         </h1>
         <div className="flex">
           <input
             type="text"
             id="search"
-            className="bg-gray-200 border capitalize lg:text-lg text-base flex-1 border-black rounded-md px-3 py-1"
+            autoFocus={true}
+            className="bg-gray-100 border capitalize lg:text-base flex-1 border-black rounded-md px-3 py-1"
             placeholder="Enter product name"
             onChange={dropdownEdit}
           />
@@ -90,12 +91,12 @@ export default function Home() {
 
         {/* Displaying Dropdown Products */}
         {loading && <AtomicSpinner/>}
-        <div className="absolute w-11/12 bg-white z-40">
+        <div className="absolute w-11/12 bg-white z-40 backdrop-blur">
           {dropdownProducts.map((item) => {
             return (
               <div
                 key={item._id}
-                className="container my-1 flex justify-between items-center lg:text-lg text-base bg-gray-200 lg:px-4 px-2 rounded border border-gray-400 hover:bg-gray-300"
+                className="container my-1 flex justify-between items-center lg:text-lg bg-gray-100 lg:px-4 px-2 rounded border border-gray-400 hover:bg-gray-300"
               >
                 <h1 className="capitalize">{item.productName}</h1>
                 <h1>{item.quantity}</h1>
@@ -124,7 +125,7 @@ export default function Home() {
             placeholder="Minimum 3 letters"
             name="productName"
             value={values.productName}
-            className="bg-gray-200 w-full capitalize border px-3 lg:text-lg text-base border-black rounded mb-5"
+            className="bg-gray-100 w-full capitalize border px-3 lg:text-base border-black rounded mb-5"
           />
           <label htmlFor="quantity">Quantity</label>
           <input
@@ -133,7 +134,7 @@ export default function Home() {
             id="quantity"
             name="quantity"
             value={values.quantity}
-            className="bg-gray-200 w-full border px-3 lg:text-lg text-base border-black rounded mb-5"
+            className="bg-gray-100 w-full border px-3 lg:text-base border-black rounded mb-5"
           />
           <label htmlFor="price">Price</label>
           <input
@@ -142,7 +143,7 @@ export default function Home() {
             id="price"
             name="price"
             value={values.price}
-            className="bg-gray-200 w-full border px-3 lg:text-lg text-base border-black rounded mb-3"
+            className="bg-gray-100 w-full border px-3 lg:text-base border-black rounded mb-3"
           />
           <button
             type="submit"
@@ -153,10 +154,10 @@ export default function Home() {
         </form>
 
         {/* Displaying existing stock */}
-        <h1 className="lg:text-2xl text-lg text-center my-3 font-semibold">
+        <h1 className="lg:text-xl text-lg underline underline-offset-4 text-center my-3 font-semibold">
           Current Stock
         </h1>
-        {loading2?<AtomicSpinner />:<table className="border-collapse w-full bg-red-100 mb-12">
+        {loading2?<AtomicSpinner />:<table className="border-collapse w-full bg-gray-300 mb-12">
             <thead>
               <tr>
                 <th className="border border-black px-4 py-2">Product Name</th>

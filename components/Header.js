@@ -10,7 +10,7 @@ const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
   if (session.data) {
     return (
-      <header className="text-gray-500 relative mx-auto body-font container">
+      <header className="text-gray-500 shadow-md relative mx-auto body-font container">
         <div className="container mx-auto justify-between flex flex-wrap px-4 py-2 flex-col md:flex-row items-center">
           <Link
             title="Home"
@@ -21,14 +21,14 @@ const Header = () => {
           </Link>
           <div className="flex">
             {showProfile && (
-              <div className="rounded absolute top-16 w-2/12 bg-slate-600 text-white z-50">
-                <h1 className="text-lg font-semibold p-2 capitalize">
+              <div className="rounded absolute top-16 w-2/12 bg-slate-200 border border-black text-black z-50">
+                <h1 className="text-lg font-medium p-2 capitalize">
                   {session?.data?.user?.email?.slice(0, 11)}
                 </h1>
                 <h1
                   onClick={() => signOut()}
                   title="SignOut"
-                  className="flex p-2 cursor-pointer rounded hover:bg-slate-500 text-lg font-semibold justify-between items-center mt-1"
+                  className="flex p-2 cursor-pointer border-t border-black font-medium hover:bg-slate-400 text-lg justify-between items-center mt-1"
                 >
                   Sign Out
                   <div className="text-xl">
@@ -48,6 +48,12 @@ const Header = () => {
               </Link>
               <Link href={"/CreateBill"} className="mr-5 hover:text-black">
                 Create Bill
+              </Link>
+              <Link href={"/Restock"} className="mr-5 hover:text-black">
+                Restock
+              </Link>
+              <Link href={"/RestockBills"} className="mr-5 hover:text-black">
+                Restock Bill
               </Link>
             </nav>
           </div>

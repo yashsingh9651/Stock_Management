@@ -6,9 +6,9 @@ export async function POST(request){
     const client = new MongoClient(uri);
   try {
     const database = client.db("stock");
-    const billProducts = database.collection("billProducts");
+    const billProducts = database.collection("restockBillProducts");
     await billProducts.insertMany(body);
-    return NextResponse.json({ ok: true,meassge:"Bill Generated Successfully" });
+    return NextResponse.json({ ok: true,message:"Restock Bill Added Successfully" });
    }finally {
     await client.close();
   }

@@ -16,7 +16,7 @@ export async function GET(request) {
         },
       ])
       .toArray();
-    return NextResponse.json({ success: true, products });
+    return NextResponse.json(products);
   } finally {
     await client.close();
   }

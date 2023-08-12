@@ -23,7 +23,7 @@ export async function GET(request){
     const bills = database.collection("bills");
     const query = {};
     const allBills = await bills.find(query).toArray();
-    return NextResponse.json({ allBills });
+    return NextResponse.json(allBills);
    }finally {
     await client.close();
   }

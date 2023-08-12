@@ -12,7 +12,7 @@ export default function Page({ params }) {
   // Fetching Bill History Products...
   const [billHistProd, setBillHistProd] = useState([]);
   const fetchingProducts = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getBillProducts`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getRestockBillProducts`,{
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export default function Page({ params }) {
   // Fetching Biller name, Customer Name and SubTotal Amount.... 
   const [billingDetails, setBillingDetails] = useState({});
   const fetchingBillDetail = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getBill`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getRestockBill`,{
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

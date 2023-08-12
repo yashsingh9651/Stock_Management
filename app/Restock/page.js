@@ -6,19 +6,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
 import {
-  fetchBills,
   fetchDropdownProducts,
-  generatingBill,
   setDropdownEmpty,
   setQuery,
-  toggleProductBox,
+  toggleRestockProductBox,
   toggleLoading,
-  setClientBillingProductsEmpty,
-  sliceingClientBillProd,
+  setRestockBillingProductsEmpty,
+  sliceingRestockBillProd,
   toggleEditClientProd,
+  fetchRestockBills,
+  AddingStockBill,
 } from "@/slices/apiCallSlice";
 import AtomicSpinner from "@/components/AtomicSpinner";
-import AddProductBox from "@/components/AddProductBox";
+import RestockAddProdBox from "@/components/RestockAddProdBox";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const page = () => {
@@ -32,13 +32,13 @@ const page = () => {
   const query = useSelector((state) => state.apiCall.query);
   const dropdownProducts = useSelector((state) => state.apiCall.dropdownProducts);
   const loading = useSelector((state) => state.apiCall.loading);
-  const clientBillingProducts = useSelector((state) => state.apiCall.clientBillingProducts);
-  const showProductBox = useSelector((state) => state.apiCall.showProductBox);
+  const restockBillingProducts = useSelector((state) => state.apiCall.restockBillingProducts);
+  const showRestockProductBox = useSelector((state) => state.apiCall.showRestockProductBox);
   const subTotal = useSelector((state) => state.apiCall.subTotal);
-  const bills = useSelector((state) => state.apiCall.bills);
-  const [customerName, setCustomerName] = useState("");
+  const restockBills = useSelector((state) => state.apiCall.restockBills);
+  const [stockerName, setStockerName] = useState("");
   useEffect(() => {
-    dispatch(fetchBills());
+    dispatch(fetchRestockBills());
   }, []);
   // Displaying search result on searching in search field ....
   const dropdownEdit = async (e) => {
@@ -50,26 +50,25 @@ const page = () => {
       dispatch(setDropdownEmpty());
     }
   };
-  // Adding Product to billing product list
+  // Adding Product to billing product list...
   const [editFuncData, setEditFuncData] = useState("");
   const addProduct = async (item) => {
-    dispatch(toggleEditClientProd(null))
     dispatch(setDropdownEmpty());
     setEditFuncData(item);
-    dispatch(toggleProductBox());
+    dispatch(toggleRestockProductBox());
   };
   // Editing Product of billing product list...
   const editProd = (item) => {
     setEditFuncData(item);
-    dispatch(toggleProductBox());
-    dispatch(toggleEditClientProd(item.id))
+    dispatch(toggleRestockProductBox());
+    dispatch(toggleEditClientProd(item.id));
   }
-  // generating Bill and reducing products .....
-  const reduceQuantAfterBill = async (element) => {
+  // Adding Restock Bill and updating products .....
+  const addProductsAfterBill = async (element) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_HOST}/api/reduceAddProducts`,
       {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -79,32 +78,32 @@ const page = () => {
     await response.json();
   };
   const generateBill = async () => {
-    dispatch(generatingBill(clientBillingProducts));
-    await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getPostBills`, {
+    dispatch(AddingStockBill(restockBillingProducts));
+    await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getPostRestockBills`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        billNumber: bills.length+1,
+        billNumber: restockBills.length+1,
         biller: session?.user?.email?.slice(0, 11),
-        customer: customerName,
+        stocker: stockerName,
         subTotal: subTotal,
         billingDate:new Date().toJSON().slice(0, 10)
       }),
     });
-    clientBillingProducts.forEach(element => {
-      reduceQuantAfterBill(element);
+    restockBillingProducts.forEach(element => {
+        addProductsAfterBill(element);
     });
     dispatch(setDropdownEmpty());
-    dispatch(setClientBillingProductsEmpty());
+    dispatch(setRestockBillingProductsEmpty());
   };
   return (
     <>
       <ToastContainer />
       <div className="container relative mx-auto lg:px-4 px-1">
         {/* small Box To set Quantity */}
-        {showProductBox && <AddProductBox editFuncData={editFuncData} />}
+        {showRestockProductBox && <RestockAddProdBox editFuncData={editFuncData} />}
         {/* Search Bar */}
         <h1 className="lg:text-lg font-semibold mt-3">
           Search to add Products
@@ -137,18 +136,15 @@ const page = () => {
         </div>
         {/* Billing Detail Box */}
         <div className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200">
-          <h1 className="text-center text-xl font-medium">
-            Akanksha Enterprises
-          </h1>
           <div className="flex justify-between items-center mt-2">
-            <h1 className="capitalize text-lg font-medium">
+          <h1 className="capitalize text-lg font-medium">
               Biller: {session?.user?.email?.slice(0, 11)}
             </h1>
             <div>
-              <label htmlFor="customer" className="capitalize text-lg font-medium">Customer: </label>
-              <input type="text" required placeholder="Customer Name" name="customer" autoFocus="true" onChange={(e)=>setCustomerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1" />
+              <label htmlFor="sender" className="capitalize text-lg font-medium">Sender: </label>
+              <input type="text" required placeholder="Sender Name" name="sender" autoFocus="true" onChange={(e)=>setStockerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1" />
             </div>
-            <h1 className="capitalize text-lg font-medium">Bill Number:{bills.length+1}</h1>
+            <h1 className="capitalize text-lg font-medium">Bill Number:{restockBills.length+1}</h1>
           </div>
           <table className="border-collapse w-full bg-gray-300 mb-10 mt-2">
             <thead>
@@ -161,7 +157,7 @@ const page = () => {
             </thead>
             {/* Billing Products... */}
             <tbody>
-              {clientBillingProducts.map((item) => (
+              {restockBillingProducts.map((item) => (
                 <tr key={item.id}>
                   <td className="border capitalize border-black px-4 py-2">
                     {item.productName}
@@ -176,7 +172,7 @@ const page = () => {
                     ₹{item.price * item.quantity}
                     <div className="absolute right-1 top-1 z-50 text-3xl flex">
                     <FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3 cursor-pointer" />
-                    <AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingClientBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />
+                    <AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingRestockBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />
                     </div>
                   </td>
                 </tr>
@@ -190,10 +186,10 @@ const page = () => {
         <div className="flex justify-end">
           <button
             onClick={() => generateBill()}
-            disabled={clientBillingProducts.length===0}
+            disabled={restockBillingProducts.length===0}
             className="bg-blue-500 rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
           >
-            Generate Bill
+            Restock
           </button>
         </div>
       </div>

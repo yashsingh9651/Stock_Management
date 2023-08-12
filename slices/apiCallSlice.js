@@ -4,14 +4,21 @@ import { toast } from "react-toastify";
 export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await response.json();
-  return rjson.products;
+  return rjson;
 });
 
 //  Fetching Bills...
 export const fetchBills = createAsyncThunk("fetchBills", async () => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/bills`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getPostBills`);
   let rjson = await response.json();
-  return rjson.allBills;
+  return rjson;
+});
+
+//  Fetching Restock Bills...
+export const fetchRestockBills = createAsyncThunk("fetchRestockBills", async () => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getPostRestockBills`);
+  let rjson = await response.json();
+  return rjson;
 });
 
 // Fetching Dropdown Products...
@@ -22,7 +29,7 @@ export const fetchDropdownProducts = createAsyncThunk(
       `${process.env.NEXT_PUBLIC_HOST}/api/search?query=` + query
     );
     let rjson = await response.json();
-    return rjson.products;
+    return rjson;
   }
 );
 
@@ -30,7 +37,7 @@ export const fetchDropdownProducts = createAsyncThunk(
 export const generatingBill = createAsyncThunk(
   "generatingBill",
   async (products) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/billProducts`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/postBillProducts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +46,44 @@ export const generatingBill = createAsyncThunk(
     });
     const res = await response.json();
     if (res.ok) {
-      toast.success("Bill Generated Successfully", {
+      toast.success(res.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.error("Internal Server Error", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+);
+// Adding Restock Bill...
+export const AddingStockBill = createAsyncThunk(
+  "AddingStockBill",
+  async (products) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/postRestockBillProducts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(products),
+    });
+    const res = await response.json();
+    if (res.ok) {
+      toast.success(res.message, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -99,15 +143,15 @@ export const addProduct = createAsyncThunk("addProduct", async (values) => {
   }
   const r = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await r.json();
-  return rjson.products;
+  return rjson;
 });
 
-//  Editting Product...
+//  Updating Product...
 export const editProduct = createAsyncThunk("editProduct", async (values) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_HOST}/api/editProduct`,
+    `${process.env.NEXT_PUBLIC_HOST}/api/product`,
     {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -116,7 +160,7 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
   );
   const res = await response.json();
   if (res.ok) {
-    toast.success("Product Editted Successfully", {
+    toast.success(res.message, {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -127,7 +171,7 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
       theme: "light",
     });
   } else {
-    toast.error("Internal Server Error", {
+    toast.error("Internal Server Error.", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -140,7 +184,7 @@ export const editProduct = createAsyncThunk("editProduct", async (values) => {
   }
   const r = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product`);
   let rjson = await r.json();
-  return rjson.products;
+  return rjson;
 });
 
 // Creating Slice...
@@ -152,12 +196,17 @@ const apiCallSlice = createSlice({
     dropdownProducts: [],
     query: "",
     bills:[],
+    restockBills:[],
     showEditBox: false,
     loading: false,
     showProductBox:false,
+    showRestockProductBox:false,
     clientBillingProducts:[],
+    restockBillingProducts:[],
     subTotal:0,
     editClientProd:null,
+    loadingBills:true,
+    loadingRestockBills:true,
   },
   reducers: {
     toggleEditBox: (state) => {
@@ -178,8 +227,15 @@ const apiCallSlice = createSlice({
     toggleProductBox: (state) => {
       state.showProductBox = !state.showProductBox;
     },
+    toggleRestockProductBox: (state) => {
+      state.showRestockProductBox = !state.showRestockProductBox;
+    },
     setClientBillingProductsEmpty: (state) => {
       state.clientBillingProducts = [];
+      state.subTotal=0
+    },
+    setRestockBillingProductsEmpty: (state) => {
+      state.restockBillingProducts = [];
       state.subTotal=0
     },
     sliceingClientBillProd: (state,action) => {
@@ -188,12 +244,40 @@ const apiCallSlice = createSlice({
       })
       if (index === 0) {
         state.clientBillingProducts.shift();
+        if (state.clientBillingProducts.length>0) {
+          let subT = 0;
+          state.clientBillingProducts.forEach((element)=>{
+            subT += element.price*element.quantity;
+            state.subTotal = subT;
+          });
+        }else{
+          state.subTotal=0;
+        }
       }else{
-        state.clientBillingProducts.splice(index,index);
+        state.clientBillingProducts.splice(index,1);
+        if (state.clientBillingProducts.length>0) {
+          let subT = 0;
+          state.clientBillingProducts.forEach((element)=>{
+            subT += element.price*element.quantity;
+            state.subTotal = subT;
+          });
+        }else{
+          state.subTotal=0;
+        }
       }
-      if (state.clientBillingProducts.length>0) {
+    },
+    sliceingRestockBillProd: (state,action) => {
+      const index = state.restockBillingProducts.findIndex(object => {
+        return object.id === action.payload;
+      })
+      if (index === 0) {
+        state.restockBillingProducts.shift();
+      }else{
+        state.restockBillingProducts.splice(index,1);
+      }
+      if (state.restockBillingProducts.length>0) {
         let subT = 0;
-        state.clientBillingProducts.forEach((element)=>{
+        state.restockBillingProducts.forEach((element)=>{
           subT += element.price*element.quantity;
           state.subTotal = subT;
         });
@@ -209,6 +293,14 @@ const apiCallSlice = createSlice({
         state.subTotal = subT;
       })
     },
+    concatingRestockBillingProduct: (state,action) => {
+      state.restockBillingProducts = state.restockBillingProducts.concat(action.payload);
+      let subT = 0;
+      state.restockBillingProducts.forEach((element)=>{
+        subT += element.price*element.quantity;
+        state.subTotal = subT;
+      })
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
@@ -217,6 +309,11 @@ const apiCallSlice = createSlice({
     });
     builder.addCase(fetchBills.fulfilled, (state, action) => {
       state.bills = action.payload;
+      state.loadingBills= false;
+    });
+    builder.addCase(fetchRestockBills.fulfilled, (state, action) => {
+      state.restockBills = action.payload;
+      state.loadingRestockBills= false;
     });
     builder.addCase(addProduct.fulfilled, (state, action) => {
       state.products = action.payload;
@@ -231,6 +328,6 @@ const apiCallSlice = createSlice({
     });
   },
 });
-export const { toggleEditBox,sliceingClientBillProd,setClientBillingProductsEmpty,toggleEditClientProd, toggleLoading, setDropdownEmpty,concatingBillingProduct,toggleProductBox,setQuery } =
+export const { toggleEditBox,concatingRestockBillingProduct,setRestockBillingProductsEmpty,sliceingClientBillProd,sliceingRestockBillProd,setClientBillingProductsEmpty,toggleEditClientProd, toggleLoading, setDropdownEmpty,concatingBillingProduct,toggleProductBox,toggleRestockProductBox,setQuery } =
   apiCallSlice.actions;
 export default apiCallSlice.reducer;

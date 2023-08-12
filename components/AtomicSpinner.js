@@ -1,5 +1,5 @@
+"use client"
 import AtomicSpinner from "atomic-spinner";
-
 const App = () => {
   return (
     <div className="absolute w-full backdrop-blur-sm left-0 z-50">
