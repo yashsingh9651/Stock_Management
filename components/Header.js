@@ -21,7 +21,7 @@ const Header = () => {
           </Link>
           <div className="flex">
             {showProfile && (
-              <div className="rounded absolute top-16 w-2/12 bg-slate-200 border border-black text-black z-50">
+              <div className="rounded absolute top-32 md:top-16 lg:w-2/12 bg-slate-200 border border-black text-black z-50">
                 <h1 className="text-lg font-medium p-2 capitalize">
                   {session?.data?.user?.email?.slice(0, 11)}
                 </h1>
@@ -39,7 +39,7 @@ const Header = () => {
             )}
             <CgProfile
             title="Profile"
-              className="text-3xl mr-2 hover:text-black"
+              className="lg:text-3xl text-5xl mr-2 hover:text-black"
               onClick={() => setShowProfile(!showProfile)}
             />
             <nav className="flex flex-wrap items-center text-xl justify-center">
@@ -71,7 +71,7 @@ const Header = () => {
         >
           <Image src="/logo.png" width={110} height={70} alt="logo" />
         </Link>
-        <nav className="flex flex-wrap items-center text-xl justify-center">
+        <nav className="flex flex-wrap items-center lg:text-xl text-lg justify-center">
           <div>
             <CgProfile
             title="Sign In"

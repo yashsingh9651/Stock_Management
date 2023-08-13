@@ -88,7 +88,7 @@ export default function Page({ params }) {
         <h1 className="text-center underline underline-offset-4 p-2 text-xl font-medium">
           Akanksha Enterprises
         </h1>
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex flex-wrap justify-between items-center mt-2">
           <h1 className="capitalize text-lg font-medium">
             Biller: {billingDetails.biller}
           </h1>

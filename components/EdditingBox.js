@@ -29,7 +29,7 @@ const EdditingBox = ({ editFuncData }) => {
   return (
     <>
       <div className="w-full border border-black flex justify-center backdrop-blur-sm items-center bg-opacity-70 bg-gray-100 h-full fixed z-50 top-0">
-        <div className="w-1/2 border border-black max-h-fit relative bg-gray-300 rounded-lg p-4 shadow-xl shadow-slate-600">
+        <div className="lg:w-1/2 w-11/12 border border-black max-h-fit relative bg-gray-300 rounded-lg p-4 shadow-xl shadow-slate-600">
           <h1
             className="absolute text-2xl text-red-500 hover:text-red-700 top-4 right-5 z-50"
             onClick={() => {

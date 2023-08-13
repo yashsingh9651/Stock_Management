@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { AiTwotoneDelete } from 'react-icons/ai';
-import { FaEdit } from 'react-icons/fa';
+import { AiTwotoneDelete } from "react-icons/ai";
+import { FaEdit } from "react-icons/fa";
 import {
   fetchBills,
   fetchDropdownProducts,
@@ -32,9 +32,13 @@ const page = () => {
   const dispatch = useDispatch();
   const pdfRef = useRef();
   const query = useSelector((state) => state.apiCall.query);
-  const dropdownProducts = useSelector((state) => state.apiCall.dropdownProducts);
+  const dropdownProducts = useSelector(
+    (state) => state.apiCall.dropdownProducts
+  );
   const loading = useSelector((state) => state.apiCall.loading);
-  const clientBillingProducts = useSelector((state) => state.apiCall.clientBillingProducts);
+  const clientBillingProducts = useSelector(
+    (state) => state.apiCall.clientBillingProducts
+  );
   const showProductBox = useSelector((state) => state.apiCall.showProductBox);
   const subTotal = useSelector((state) => state.apiCall.subTotal);
   const bills = useSelector((state) => state.apiCall.bills);
@@ -46,7 +50,7 @@ const page = () => {
   // Converting html page to pdf format and Download pdf...
   const printPdf = useReactToPrint({
     content: () => pdfRef.current,
-    documentTitle: `Bill Number-${bills.length+1}`
+    documentTitle: `Bill Number-${bills.length + 1}`,
   });
   // Displaying search result on searching in search field ....
   const dropdownEdit = async (e) => {
@@ -61,7 +65,7 @@ const page = () => {
   // Adding Product to billing product list
   const [editFuncData, setEditFuncData] = useState("");
   const addProduct = async (item) => {
-    dispatch(toggleEditClientProd(null))
+    dispatch(toggleEditClientProd(null));
     dispatch(setDropdownEmpty());
     setEditFuncData(item);
     dispatch(toggleProductBox());
@@ -70,8 +74,8 @@ const page = () => {
   const editProd = (item) => {
     setEditFuncData(item);
     dispatch(toggleProductBox());
-    dispatch(toggleEditClientProd(item.id))
-  }
+    dispatch(toggleEditClientProd(item.id));
+  };
   // generating Bill and reducing products .....
   const reduceQuantAfterBill = async (element) => {
     const response = await fetch(
@@ -94,14 +98,14 @@ const page = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        billNumber: bills.length+1,
+        billNumber: bills.length + 1,
         biller: session?.user?.email?.slice(0, 11),
         customer: customerName,
         subTotal: subTotal,
-        billingDate:new Date().toJSON().slice(0, 10)
+        billingDate: new Date().toJSON().slice(0, 10),
       }),
     });
-    clientBillingProducts.forEach(element => {
+    clientBillingProducts.forEach((element) => {
       reduceQuantAfterBill(element);
     });
     dispatch(setDropdownEmpty());
@@ -144,19 +148,37 @@ const page = () => {
           })}
         </div>
         {/* Billing Detail Box */}
-        <div ref={pdfRef} className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200">
+        <div
+          ref={pdfRef}
+          className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200"
+        >
           <h1 className="text-center text-xl font-medium">
             Akanksha Enterprises
           </h1>
-          <div className="flex justify-between items-center mt-2">
+          <div className="flex flex-wrap justify-between items-center mt-2">
             <h1 className="capitalize text-lg font-medium">
               Biller: {session?.user?.email?.slice(0, 11)}
             </h1>
             <div>
-              <label htmlFor="customer" className="capitalize text-lg font-medium">Customer: </label>
-              <input type="text" required placeholder="Customer Name" name="customer" autoFocus="true" onChange={(e)=>setCustomerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1" />
+              <label
+                htmlFor="customer"
+                className="capitalize text-lg font-medium"
+              >
+                Customer:{" "}
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Customer Name"
+                name="customer"
+                autoFocus="true"
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1"
+              />
             </div>
-            <h1 className="capitalize text-lg font-medium">Bill Number:{bills.length+1}</h1>
+            <h1 className="capitalize text-lg font-medium">
+              Bill Number:{bills.length + 1}
+            </h1>
           </div>
           <table className="border-collapse w-full bg-gray-300 mb-10 mt-2">
             <thead>
@@ -177,14 +199,28 @@ const page = () => {
                   <td className="border border-black px-4 py-2">
                     {item.quantity}
                   </td>
-                  <td  className="border border-black px-4 py-2">
+                  <td className="border border-black px-4 py-2">
                     ₹{item.price}
                   </td>
                   <td className="border border-black px-4 py-2 relative">
                     ₹{item.price * item.quantity}
-                    <div className="absolute right-1 top-1 z-50 text-3xl flex">
-                    {showBut&&<FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3" />}
-                    {showBut&&<AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingClientBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />}
+                    <div className="absolute md:right-1 right-0 md:top-2 lg:top-1 top-0 z-50 lg:text-3xl text-2xl flex">
+                      {showBut && (
+                        <FaEdit
+                          title="Edit"
+                          onClick={() => editProd(item)}
+                          className="text-green-400 hover:text-green-600 mr-3"
+                        />
+                      )}
+                      {showBut && (
+                        <AiTwotoneDelete
+                          title="Delete"
+                          onClick={() =>
+                            dispatch(sliceingClientBillProd(item.id))
+                          }
+                          className="text-red-400 hover:text-red-600 cursor-pointer"
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -198,14 +234,14 @@ const page = () => {
         <div className="flex justify-end">
           <button
             onClick={() => generateBill()}
-            disabled={clientBillingProducts.length===0}
+            disabled={clientBillingProducts.length === 0}
             className="bg-blue-500 rounded border-2 mr-4 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
-            >
+          >
             Generate Bill
           </button>
           <button
             onClick={() => printPdf()}
-            disabled={clientBillingProducts.length===0}
+            disabled={clientBillingProducts.length === 0}
             className="bg-blue-500 rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
           >
             Print Bill

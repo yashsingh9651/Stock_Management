@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { AiTwotoneDelete } from 'react-icons/ai';
-import { FaEdit } from 'react-icons/fa';
+import { AiTwotoneDelete } from "react-icons/ai";
+import { FaEdit } from "react-icons/fa";
 import {
   fetchDropdownProducts,
   setDropdownEmpty,
@@ -30,10 +30,16 @@ const page = () => {
   });
   const dispatch = useDispatch();
   const query = useSelector((state) => state.apiCall.query);
-  const dropdownProducts = useSelector((state) => state.apiCall.dropdownProducts);
+  const dropdownProducts = useSelector(
+    (state) => state.apiCall.dropdownProducts
+  );
   const loading = useSelector((state) => state.apiCall.loading);
-  const restockBillingProducts = useSelector((state) => state.apiCall.restockBillingProducts);
-  const showRestockProductBox = useSelector((state) => state.apiCall.showRestockProductBox);
+  const restockBillingProducts = useSelector(
+    (state) => state.apiCall.restockBillingProducts
+  );
+  const showRestockProductBox = useSelector(
+    (state) => state.apiCall.showRestockProductBox
+  );
   const subTotal = useSelector((state) => state.apiCall.subTotal);
   const restockBills = useSelector((state) => state.apiCall.restockBills);
   const [stockerName, setStockerName] = useState("");
@@ -62,7 +68,7 @@ const page = () => {
     setEditFuncData(item);
     dispatch(toggleRestockProductBox());
     dispatch(toggleEditClientProd(item.id));
-  }
+  };
   // Adding Restock Bill and updating products .....
   const addProductsAfterBill = async (element) => {
     const response = await fetch(
@@ -85,15 +91,15 @@ const page = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        billNumber: restockBills.length+1,
+        billNumber: restockBills.length + 1,
         biller: session?.user?.email?.slice(0, 11),
         stocker: stockerName,
         subTotal: subTotal,
-        billingDate:new Date().toJSON().slice(0, 10)
+        billingDate: new Date().toJSON().slice(0, 10),
       }),
     });
-    restockBillingProducts.forEach(element => {
-        addProductsAfterBill(element);
+    restockBillingProducts.forEach((element) => {
+      addProductsAfterBill(element);
     });
     dispatch(setDropdownEmpty());
     dispatch(setRestockBillingProductsEmpty());
@@ -103,7 +109,9 @@ const page = () => {
       <ToastContainer />
       <div className="container relative mx-auto lg:px-4 px-1">
         {/* small Box To set Quantity */}
-        {showRestockProductBox && <RestockAddProdBox editFuncData={editFuncData} />}
+        {showRestockProductBox && (
+          <RestockAddProdBox editFuncData={editFuncData} />
+        )}
         {/* Search Bar */}
         <h1 className="lg:text-lg font-semibold mt-3">
           Search to add Products
@@ -136,15 +144,30 @@ const page = () => {
         </div>
         {/* Billing Detail Box */}
         <div className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200">
-          <div className="flex justify-between items-center mt-2">
-          <h1 className="capitalize text-lg font-medium">
+          <div className="flex flex-wrap justify-between items-center mt-2">
+            <h1 className="capitalize text-lg font-medium">
               Biller: {session?.user?.email?.slice(0, 11)}
             </h1>
             <div>
-              <label htmlFor="sender" className="capitalize text-lg font-medium">Sender: </label>
-              <input type="text" required placeholder="Sender Name" name="sender" autoFocus="true" onChange={(e)=>setStockerName(e.target.value)} className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1" />
+              <label
+                htmlFor="sender"
+                className="capitalize text-lg font-medium"
+              >
+                Sender:{" "}
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Sender Name"
+                name="sender"
+                autoFocus="true"
+                onChange={(e) => setStockerName(e.target.value)}
+                className="capitalize text-lg font-medium rounded px-2 bg-slate-100 py-1"
+              />
             </div>
-            <h1 className="capitalize text-lg font-medium">Bill Number:{restockBills.length+1}</h1>
+            <h1 className="capitalize text-lg font-medium">
+              Bill Number:{restockBills.length + 1}
+            </h1>
           </div>
           <table className="border-collapse w-full bg-gray-300 mb-10 mt-2">
             <thead>
@@ -165,14 +188,24 @@ const page = () => {
                   <td className="border border-black px-4 py-2">
                     {item.quantity}
                   </td>
-                  <td  className="border border-black px-4 py-2">
+                  <td className="border border-black px-4 py-2">
                     ₹{item.price}
                   </td>
                   <td className="border border-black px-4 py-2 relative">
                     ₹{item.price * item.quantity}
-                    <div className="absolute right-1 top-1 z-50 text-3xl flex">
-                    <FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3 cursor-pointer" />
-                    <AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingRestockBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />
+                    <div className="absolute md:right-1 right-0 md:top-2 lg:top-1 top-0 z-40 lg:text-3xl text-2xl flex">
+                      <FaEdit
+                        title="Edit"
+                        onClick={() => editProd(item)}
+                        className="text-green-400 hover:text-green-600 mr-3 cursor-pointer"
+                      />
+                      <AiTwotoneDelete
+                        title="Delete"
+                        onClick={() =>
+                          dispatch(sliceingRestockBillProd(item.id))
+                        }
+                        className="text-red-400 hover:text-red-600 cursor-pointer"
+                      />
                     </div>
                   </td>
                 </tr>
@@ -186,7 +219,7 @@ const page = () => {
         <div className="flex justify-end">
           <button
             onClick={() => generateBill()}
-            disabled={restockBillingProducts.length===0}
+            disabled={restockBillingProducts.length === 0}
             className="bg-blue-500 rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
           >
             Restock

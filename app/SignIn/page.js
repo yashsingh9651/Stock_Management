@@ -26,9 +26,9 @@ const page = () => {
     <>
       <ToastContainer/>
     <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto flex flex-wrap items-center">
+      <div className="container px-5 lg:py-24 pt-5 pb-3 mx-auto flex flex-wrap items-center">
         <div className="lg:w-3/5 md:w-1/2 md:pr-12 lg:pr-0 pr-0">
-          <h1 className="title-font capitalize font-medium text-xl text-gray-900">
+          <h1 className="title-font capitalize font-medium lg:text-xl text-base text-gray-900">
             one & only a simple option to make your bussiness super easy. by creating bill and access to all your previous bills and keeping an eye on your inventory.
           </h1>
         </div>

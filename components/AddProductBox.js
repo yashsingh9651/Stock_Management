@@ -38,7 +38,7 @@ const AddProductBox = ({editFuncData}) => {
       });
   return (
     <div className='fixed left-0 top-0 z-50 flex justify-center items-center w-full h-full backdrop-blur-sm'>
-      <form onSubmit={handleSubmit} className="w-1/2 p-5 mx-auto bg-gray-300 rounded shadow-xl shadow-slate-600 border border-black text-black">
+      <form onSubmit={handleSubmit} className="lg:w-1/2 w-11/12 p-5 mx-auto bg-gray-300 rounded shadow-xl shadow-slate-600 border border-black text-black">
         <label htmlFor="name">Product Name</label>
               <h1 className='text-lg text-gray-800 font-medium capitalize'>{editFuncData.productName}</h1>
               <label htmlFor="quantity">Quantity</label>

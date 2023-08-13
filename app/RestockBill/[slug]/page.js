@@ -76,7 +76,7 @@ export default function Page({ params }) {
   return (
     <div className="container lg:px-8 px-3 mx-auto mt-10">
       <div ref={pdfRef} className="lg:px-5 px-2 mt-2 border border-black rounded bg-slate-200">
-            <div className="flex justify-between items-center mt-2">
+            <div className="flex flex-wrap justify-between items-center mt-2">
               <h1 className="capitalize text-lg font-medium">
                 Biller: {billingDetails.biller}
               </h1>
