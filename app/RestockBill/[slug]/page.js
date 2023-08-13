@@ -2,6 +2,10 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
 export default function Page({ params }) {
   const { data: session } = useSession({
     required: true,
@@ -39,15 +43,44 @@ export default function Page({ params }) {
     fetchingProducts();
     fetchingBillDetail();
   }, [])
-  
+  // Converting html page to pdf format and Download pdf...
+  const pdfRef = useRef();
+  const downloadPdf = () => {
+    const input = pdfRef.current;
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "px", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 20;
+      pdf.addImage(
+        imgData,
+        "PNG",
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
+      pdf.save(`Bill Number-${billingDetails.billNumber}`);
+    });
+  };
+  // Converting html page to pdf format and Printing it...
+  const printPdf = useReactToPrint({
+    content: () => pdfRef.current,
+    documentTitle: `Restock Bill Number-${billingDetails.billNumber}`,
+  });
   return (
     <div className="container lg:px-8 px-3 mx-auto mt-10">
-      <div className="lg:px-5 px-2 mt-2 border border-black rounded bg-slate-200">
+      <div ref={pdfRef} className="lg:px-5 px-2 mt-2 border border-black rounded bg-slate-200">
             <div className="flex justify-between items-center mt-2">
               <h1 className="capitalize text-lg font-medium">
                 Biller: {billingDetails.biller}
               </h1>
-              <h1  className="capitalize text-lg font-medium">Customer: {billingDetails.customer}</h1>
+              <h1  className="capitalize text-lg font-medium">Customer: {billingDetails.stocker}</h1>
               <h1 className="capitalize text-lg font-medium">Bill Number:{billingDetails.billNumber}</h1>
               <h1 className="capitalize text-lg font-medium">Date:{billingDetails.billingDate}</h1>
             </div>
@@ -84,6 +117,20 @@ export default function Page({ params }) {
               SubTotal :₹{billingDetails.subTotal}
             </h1>
           </div>
+          <div className="flex justify-end">
+        <button
+          onClick={() => downloadPdf()}
+          className="bg-blue-500 shadow-lg mr-4 hover:shadow-md shadow-black rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
+        >
+          Download Bill
+        </button>
+        <button
+          onClick={() => printPdf()}
+          className="bg-blue-500 shadow-lg hover:shadow-md shadow-black rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
+        >
+          Print Bill
+        </button>
+      </div>
     </div>
   )
 }

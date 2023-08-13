@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ import {
 import AtomicSpinner from "@/components/AtomicSpinner";
 import AddProductBox from "@/components/AddProductBox";
 import { ToastContainer } from "react-toastify";
+import { useReactToPrint } from "react-to-print";
 import "react-toastify/dist/ReactToastify.css";
 const page = () => {
   const { data: session } = useSession({
@@ -29,6 +30,7 @@ const page = () => {
     },
   });
   const dispatch = useDispatch();
+  const pdfRef = useRef();
   const query = useSelector((state) => state.apiCall.query);
   const dropdownProducts = useSelector((state) => state.apiCall.dropdownProducts);
   const loading = useSelector((state) => state.apiCall.loading);
@@ -37,9 +39,15 @@ const page = () => {
   const subTotal = useSelector((state) => state.apiCall.subTotal);
   const bills = useSelector((state) => state.apiCall.bills);
   const [customerName, setCustomerName] = useState("");
+  const [showBut, setShowBut] = useState(true);
   useEffect(() => {
     dispatch(fetchBills());
   }, []);
+  // Converting html page to pdf format and Download pdf...
+  const printPdf = useReactToPrint({
+    content: () => pdfRef.current,
+    documentTitle: `Bill Number-${bills.length+1}`
+  });
   // Displaying search result on searching in search field ....
   const dropdownEdit = async (e) => {
     dispatch(setQuery(e.target.value));
@@ -136,7 +144,7 @@ const page = () => {
           })}
         </div>
         {/* Billing Detail Box */}
-        <div className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200">
+        <div ref={pdfRef} className="lg:px-4 px-2 mt-2 border border-black rounded bg-slate-200">
           <h1 className="text-center text-xl font-medium">
             Akanksha Enterprises
           </h1>
@@ -175,15 +183,15 @@ const page = () => {
                   <td className="border border-black px-4 py-2 relative">
                     ₹{item.price * item.quantity}
                     <div className="absolute right-1 top-1 z-50 text-3xl flex">
-                    <FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3 cursor-pointer" />
-                    <AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingClientBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />
+                    {showBut&&<FaEdit title="Edit" onClick={()=>editProd(item)} className="text-green-400 hover:text-green-600 mr-3" />}
+                    {showBut&&<AiTwotoneDelete title="Delete" onClick={()=>dispatch(sliceingClientBillProd(item.id))} className="text-red-400 hover:text-red-600 cursor-pointer" />}
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <h1 className="text-right text-lg font-medium">
+          <h1 className="text-right pb-4 text-lg font-medium">
             SubTotal :₹{subTotal}
           </h1>
         </div>
@@ -191,9 +199,16 @@ const page = () => {
           <button
             onClick={() => generateBill()}
             disabled={clientBillingProducts.length===0}
+            className="bg-blue-500 rounded border-2 mr-4 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
+            >
+            Generate Bill
+          </button>
+          <button
+            onClick={() => printPdf()}
+            disabled={clientBillingProducts.length===0}
             className="bg-blue-500 rounded border-2 border-black px-2 text-lg disabled:bg-blue-300 disabled:border py-1 mt-2 text-white hover:bg-blue-700"
           >
-            Generate Bill
+            Print Bill
           </button>
         </div>
       </div>
