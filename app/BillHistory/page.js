@@ -7,12 +7,13 @@ import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const page = () => {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect(process.env.NEXT_PUBLIC_AUTH_URL);
-    },
-  });
+  // Auntheticated  browser will redirect to he login page.
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL);
+  //   },
+  // });
   // Fetching Bills...
   const dispatch = useDispatch();
   const loadingBills = useSelector((state) => state.apiCall.loadingBills);

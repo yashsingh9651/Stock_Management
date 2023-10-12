@@ -20,12 +20,13 @@ import { useSession} from "next-auth/react";
 import { useFormik } from "formik";
 import { redirect } from "next/navigation";
 export default function Home() {
-  const {data:session} = useSession({
-    required:true,
-    onUnauthenticated(){
-      redirect(process.env.NEXT_PUBLIC_AUTH_URL)
-    }
-  });
+  // Auntheticated  browser will redirect to he login page.
+  // const {data:session} = useSession({
+  //   required:true,
+  //   onUnauthenticated(){
+  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL)
+  //   }
+  // });
   const dispatch = useDispatch();
   const products = useSelector((state) => state.apiCall.products);
   const query = useSelector((state) => state.apiCall.query);

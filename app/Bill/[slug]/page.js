@@ -7,12 +7,13 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useReactToPrint } from "react-to-print";
 export default function Page({ params }) {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect(process.env.NEXT_PUBLIC_AUTH_URL);
-    },
-  });
+  // Auntheticated  browser will redirect to he login page.
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL);
+  //   },
+  // });
   // Fetching Bill History Products...
   const [billHistProd, setBillHistProd] = useState([]);
   const fetchingProducts = async () => {

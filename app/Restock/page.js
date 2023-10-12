@@ -22,12 +22,13 @@ import RestockAddProdBox from "@/components/RestockAddProdBox";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const page = () => {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect(process.env.NEXT_PUBLIC_AUTH_URL);
-    },
-  });
+  // Auntheticated  browser will redirect to he login page.
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL);
+  //   },
+  // });
   const dispatch = useDispatch();
   const query = useSelector((state) => state.apiCall.query);
   const dropdownProducts = useSelector(

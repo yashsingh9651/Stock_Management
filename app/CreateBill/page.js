@@ -23,12 +23,13 @@ import { ToastContainer } from "react-toastify";
 import { useReactToPrint } from "react-to-print";
 import "react-toastify/dist/ReactToastify.css";
 const page = () => {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect(process.env.NEXT_PUBLIC_AUTH_URL);
-    },
-  });
+  // Auntheticated  browser will redirect to he login page.
+  // const { data: session } = useSession({
+  //   required: true,
+  //   onUnauthenticated() {
+  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL);
+  //   },
+  // });
   const dispatch = useDispatch();
   const pdfRef = useRef();
   const query = useSelector((state) => state.apiCall.query);
