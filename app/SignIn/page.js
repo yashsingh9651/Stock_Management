@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import { signIn } from "next-auth/react";
 import { ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 const page = () => {
   // Handleing Formik, Yup and sending credentials ....
   const data = {
@@ -75,6 +76,7 @@ const page = () => {
           >
             Sign In
           </button>
+          <Link href="/SignUp" className="text-center mt-2 text-blue-400 hover:text-blue-600">Create New Account</Link>
         </form>
       </div>
     </section>

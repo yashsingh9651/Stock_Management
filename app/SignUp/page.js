@@ -6,6 +6,7 @@ import { Schema } from "../schema/user";
 import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 const page = () => {
     // Auntheticated  browser will redirect to he login page.
   // const { data: session } = useSession({
@@ -160,6 +161,12 @@ const page = () => {
             >
               Sign Up
             </button>
+            <Link
+            href="/SignIn"
+              className="text-white text-center mt-5 bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            >
+              Sign In
+            </Link>
           </form>
         </div>
     </>

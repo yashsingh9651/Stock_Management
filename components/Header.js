@@ -17,7 +17,13 @@ const Header = () => {
             href={"/"}
             className="title-font font-medium mb-4 md:mb-0"
           >
-            <Image priority src="/logo.png" width={110} height={70} alt="logo" />
+            <Image
+              priority
+              src="/logo.png"
+              width={110}
+              height={70}
+              alt="logo"
+            />
           </Link>
           <div className="flex">
             {showProfile && (
@@ -38,7 +44,7 @@ const Header = () => {
               </div>
             )}
             <CgProfile
-            title="Profile"
+              title="Profile"
               className="lg:text-3xl text-5xl mr-2 hover:text-black"
               onClick={() => setShowProfile(!showProfile)}
             />
@@ -74,16 +80,22 @@ const Header = () => {
         <nav className="flex flex-wrap items-center lg:text-xl text-lg justify-center">
           <div>
             <CgProfile
-            title="Sign In"
-                className="text-3xl mr-2 cursor-pointer hover:text-black"
-                onClick={() => signIn()}
-              />
+              title="Sign In"
+              className="text-3xl mr-2 cursor-pointer hover:text-black"
+              onClick={() => signIn()}
+            />
           </div>
           <Link href={"/BillHistory"} className="mr-5 hover:text-black">
             Bill History
           </Link>
           <Link href={"/CreateBill"} className="mr-5 hover:text-black">
             Create Bill
+          </Link>
+          <Link href={"/Restock"} className="mr-5 hover:text-black">
+            Restock
+          </Link>
+          <Link href={"/RestockBills"} className="mr-5 hover:text-black">
+            Restock Bill
           </Link>
         </nav>
       </div>

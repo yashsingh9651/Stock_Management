@@ -8,12 +8,12 @@ import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 export default function Page({ params }) {
   // Auntheticated  browser will redirect to he login page.
-  // const { data: session } = useSession({
-  //   required: true,
-  //   onUnauthenticated() {
-  //     redirect(process.env.NEXT_PUBLIC_AUTH_URL);
-  //   },
-  // });
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(process.env.NEXT_PUBLIC_AUTH_URL);
+    },
+  });
   // Fetching Bill History Products...
   const [billHistProd, setBillHistProd] = useState([]);
   const fetchingProducts = async () => {
