@@ -28,8 +28,8 @@ const Header = () => {
           <div className="flex">
             {showProfile && (
               <div className="rounded absolute top-32 md:top-16 lg:w-2/12 bg-slate-200 border border-black text-black z-50">
-                <h1 className="text-lg font-medium p-2 capitalize">
-                  {session?.data?.user?.email?.slice(0, 11)}
+                <h1 className="text-lg font-medium p-2">
+                  {session?.data?.user?.email}
                 </h1>
                 <h1
                   onClick={() => signOut()}
